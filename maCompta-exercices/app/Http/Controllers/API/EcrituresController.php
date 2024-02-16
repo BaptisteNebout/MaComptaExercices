@@ -24,7 +24,7 @@ class EcrituresController extends Controller
     | Parameters:
     |   $uuid   -> UUID du compte
     */
-    public function getCompteEcritures( $uuid )
+    public function getEcritures( $uuid )
     {
         $ecritures = Ecriture::where('compte_uuid', $uuid)->get();
 
@@ -50,7 +50,7 @@ class EcrituresController extends Controller
         return response()->json(['items' => $ecritureformatted], 200);
     }
 
-    public function ajouterEcriture(Request $request, $uuid)
+    public function postEcriture(Request $request, $uuid)
     {
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
@@ -81,7 +81,7 @@ class EcrituresController extends Controller
         return response()->json(['uuid' => $ecriture->uuid], 201);
     }
 
-    public function updateEcriture(Request $request, $compte_uuid, $ecriture_uuid)
+    public function putEcriture(Request $request, $compte_uuid, $ecriture_uuid)
     {
 
         $validator = Validator::make($request->all(), [

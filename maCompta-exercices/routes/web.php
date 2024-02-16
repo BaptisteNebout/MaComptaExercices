@@ -23,7 +23,7 @@ Route::get('/comptes', [ComptesController::class, 'getComptes']);
 Route::get('/comptes/{uuid}', [ComptesController::class, 'getCompte']);
 
 //Ecriture
-Route::get('/comptes/{uuid}/ecritures', [EcrituresController::class, 'getCompteEcritures']);
-Route::post('/comptes/{uuid}/ecritures', [EcrituresController::class, 'ajouterEcriture']);
-Route::put('/comptes/{compte_uuid}/ecritures/{ecriture_uuid}', [EcrituresController::class, 'updateEcriture']);
+Route::get('/comptes/{uuid}/ecritures', [EcrituresController::class, 'getEcritures']);
+Route::post('/comptes/{uuid}/ecritures', [EcrituresController::class, 'postEcriture']);
+Route::put('/comptes/{compte_uuid}/ecritures/{ecriture_uuid}', [EcrituresController::class, 'putEcriture']);
 Route::delete('/comptes/{compte_uuid}/ecritures/{ecriture_uuid}', [EcrituresController::class, 'deleteEcriture']);
