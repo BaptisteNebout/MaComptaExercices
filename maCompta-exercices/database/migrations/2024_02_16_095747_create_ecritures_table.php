@@ -3,13 +3,14 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class CreateEcrituresTable extends Migration
 {
     public function up()
     {
         Schema::create('ecritures', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->uuid('uuid')->primary()->default(Str::uuid());
             $table->uuid('compte_uuid');
             $table->string('label')->default('');
             $table->date('date')->nullable();
