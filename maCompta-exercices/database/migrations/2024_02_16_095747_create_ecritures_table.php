@@ -8,7 +8,7 @@ class CreateEcrituresTable extends Migration
 {
     public function up()
     {
-        Schema::create('écritures', function (Blueprint $table) {
+        Schema::create('ecritures', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->uuid('compte_uuid');
             $table->string('label')->default('');
@@ -23,6 +23,6 @@ class CreateEcrituresTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('écritures');
+        Schema::dropIfExists('ecritures');
     }
 }
