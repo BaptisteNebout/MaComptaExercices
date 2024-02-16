@@ -20,6 +20,7 @@ Route::get('/', function () {
 });
 //Compte
 Route::get('/comptes', [ComptesController::class, 'getComptes']);
+Route::get('/comptes/{uuid}', [ComptesController::class, 'getCompte']);
 
 //Ecriture
 Route::get('/comptes/{uuid}/ecritures', [EcrituresController::class, 'getCompteEcritures']);
