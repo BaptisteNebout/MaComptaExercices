@@ -109,4 +109,23 @@ class EcrituresController extends Controller
 
         return response()->json($ecriture, 204);
     }
+
+    public function deleteEcriture($compte_uuid, $ecriture_uuid)
+    {
+
+        $ecriture = Ecriture::where('compte_uuid', $compte_uuid)->where('uuid', $ecriture_uuid)->first();
+
+        $compte = Compte::where('uuid', $compte_uuid)->first();
+        if (!$compte) {
+            return response()->json(['message' => 'Compte non trouvé.'], 404);
+        }
+
+        if (!$ecriture) {
+            return response()->json(['message' => 'Écriture non trouvée.'], 404);
+        }
+
+        $ecriture->delete();
+
+        return response()->json(null, 204);
+    }
 }
