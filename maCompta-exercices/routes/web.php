@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\ComptesController;
 use App\Http\Controllers\API\EcrituresController;
 
 /*
@@ -17,6 +18,9 @@ use App\Http\Controllers\API\EcrituresController;
 Route::get('/', function () {
     return view('welcome');
 });
+//Compte
+Route::get('/comptes', [ComptesController::class, 'getComptes']);
+
 //Ecriture
 Route::get('/comptes/{uuid}/ecritures', [EcrituresController::class, 'getCompteEcritures']);
 Route::post('/comptes/{uuid}/ecritures', [EcrituresController::class, 'ajouterEcriture']);
