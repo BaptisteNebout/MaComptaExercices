@@ -17,6 +17,8 @@ use App\Http\Controllers\API\EcrituresController;
 Route::get('/', function () {
     return view('welcome');
 });
+
 //Ecriture
 Route::get('/comptes/{uuid}/ecritures', [EcrituresController::class, 'getCompteEcritures']);
 Route::post('/comptes/{uuid}/ecritures', [EcrituresController::class, 'ajouterEcriture']);
+Route::put('/comptes/{compte_uuid}/ecritures/{ecriture_uuid}', [EcrituresController::class, 'updateEcriture']);

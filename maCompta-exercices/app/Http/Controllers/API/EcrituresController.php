@@ -24,7 +24,8 @@ class EcrituresController extends Controller
     | Parameters:
     |   $uuid   -> UUID du compte
     */
-    public function getCompteEcritures( $uuid ){
+    public function getCompteEcritures( $uuid )
+    {
         $ecritures = Ecriture::where('compte_uuid', $uuid)->get();
 
         if ($ecritures->isEmpty()) {
@@ -78,5 +79,34 @@ class EcrituresController extends Controller
         $ecriture->save();
 
         return response()->json(['uuid' => $ecriture->uuid], 201);
+    }
+
+    public function updateEcriture(Request $request, $compte_uuid, $ecriture_uuid)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'label' => 'required|string|max:255',
+            'date' => ['required', 'date_format:d/m/Y', 'after_or_equal:' . now()->format('d/m/Y')],
+            'type' => ['required', Rule::in(['C', 'D'])],
+            'amount' => 'required|numeric|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        $ecriture = Ecriture::where('uuid', $ecriture_uuid)->first();
+        if (!$ecriture) {
+            return response()->json(['message' => 'Écriture non trouvée.'], 404);
+        }
+
+        $ecriture->label = $request->input('label');
+        $ecriture->date = \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date'))->toDateString();
+        $ecriture->type = $request->input('type');
+        $ecriture->amount = $request->input('amount');
+
+        $ecriture->save();
+
+        return response()->json($ecriture, 204);
     }
 }
