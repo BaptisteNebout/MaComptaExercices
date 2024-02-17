@@ -218,3 +218,25 @@ Endpoint pour récupérer la liste de TOUS les comptes avec ses écritures.
 Le format de sortie est à définir par le candidat mais doit être proche des deux endpoints GET précédent.
 
 La méthode pour récupérer les données devra être optimisé. S'il y a un grand nombre de données, cela devra avoir peu d'impact sur la requête.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+**Environnement de dev**
+- win 11
+- WampServer 3.3.2 
+- Composer 2.7.1
+- Laravel 10
+- MySQL
+- PHP 8.2.13
+- Postman v10.23
+- GitHub
+
+**Commandes utiles**
+initialisation du projet:
+- cd maCompta-exercices
+- composer install
+
+Création de la DB et alimentation :
+- php artisan migrate
+- php artisan db:seed --class=CompteSeeder
+- php artisan db:seed --class=EcritureSeeder
