@@ -14,15 +14,22 @@ class ComptesController extends Controller
     public function getComptes()
     {
         $comptes = DB::table('comptes')
-                        ->leftJoin('ecritures', 'comptes.uuid', '=', 'ecritures.compte_uuid')
-                        ->select('comptes.*')
-                        ->distinct()
-                        ->get();
+            ->leftJoin(
+                'ecritures',
+                'comptes.uuid',
+                '=',
+                'ecritures.compte_uuid'
+            )
+            ->select('comptes.*')
+            ->distinct()
+            ->get();
 
         $comptesWithEcritures = [];
 
         foreach ($comptes as $compte) {
-            $ecritures = DB::table('ecritures')->where('compte_uuid', $compte->uuid)->get();
+            $ecritures = DB::table('ecritures')
+                ->where('compte_uuid', $compte->uuid)
+                ->get();
 
             if ($ecritures->isNotEmpty()) {
                 $compteData = [
@@ -53,9 +60,49 @@ class ComptesController extends Controller
 
     public function getCompte($uuid)
     {
-        $compte = DB::table('comptes')->where('uuid', $uuid)->first();
+        $compteData = [];
 
-        return response()->json($compte, 200);
+        $compte = DB::table('comptes')
+            ->leftJoin(
+                'ecritures',
+                'comptes.uuid',
+                '=',
+                'ecritures.compte_uuid'
+            )
+            ->select(
+                'comptes.*',
+                'ecritures.uuid as ecriture_uuid',
+                'ecritures.label',
+                'ecritures.date',
+                'ecritures.type',
+                'ecritures.amount'
+            )
+            ->where('comptes.uuid', $uuid)
+            ->get();
+
+        foreach ($compte as $row) {
+            if (!isset($compteData['uuid'])) {
+                $compteData['uuid'] = $row->uuid;
+                $compteData['login'] = $row->login;
+                $compteData['password'] = $row->password;
+                $compteData['name'] = $row->name;
+                $compteData['created_at'] = $row->created_at;
+                $compteData['updated_at'] = $row->updated_at;
+                $compteData['ecritures'] = [];
+            }
+
+            if (!is_null($row->ecriture_uuid)) {
+                $compteData['ecritures'][] = [
+                    'uuid' => $row->ecriture_uuid,
+                    'label' => $row->label,
+                    'date' => $row->date,
+                    'type' => $row->type,
+                    'amount' => $row->amount,
+                ];
+            }
+        }
+
+        return response()->json($compteData, 200);
     }
 
     public function postCompte(Request $request)
@@ -95,7 +142,9 @@ class ComptesController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $compte = DB::table('comptes')->where('uuid', $uuid)->first();
+        $compte = DB::table('comptes')
+            ->where('uuid', $uuid)
+            ->first();
         if (!$compte) {
             return response()->json(['message' => 'Compte non trouvé.'], 404);
         }
@@ -113,18 +162,30 @@ class ComptesController extends Controller
 
     public function deleteCompte($uuid)
     {
-        $count = DB::table('ecritures')->where('compte_uuid', $uuid)->count();
+        $count = DB::table('ecritures')
+            ->where('compte_uuid', $uuid)
+            ->count();
 
         if ($count > 0) {
-            return response()->json(['message' => 'Ce compte a des écritures associées et ne peut pas être supprimé.'], 400);
+            return response()->json(
+                [
+                    'message' =>
+                        'Ce compte a des écritures associées et ne peut pas être supprimé.',
+                ],
+                400
+            );
         }
 
-        $compte = DB::table('comptes')->where('uuid', $uuid)->first();
+        $compte = DB::table('comptes')
+            ->where('uuid', $uuid)
+            ->first();
         if (!$compte) {
             return response()->json(['message' => 'Compte non trouvé.'], 404);
         }
 
-        DB::table('comptes')->where('uuid', $uuid)->delete();
+        DB::table('comptes')
+            ->where('uuid', $uuid)
+            ->delete();
 
         return response()->json(null, 204);
     }
