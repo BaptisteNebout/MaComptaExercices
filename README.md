@@ -222,7 +222,6 @@ La méthode pour récupérer les données devra être optimisé. S'il y a un gra
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 **Environnement de dev**
-- win 11
 - WampServer 3.3.2 
 - Composer 2.7.1
 - Laravel 10
