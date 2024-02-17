@@ -3,21 +3,52 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Compte;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 class ComptesController extends Controller
 {
-
     public function getComptes()
     {
-        $comptes = DB::table('comptes')->get();
+        $comptes = DB::table('comptes')
+                        ->leftJoin('ecritures', 'comptes.uuid', '=', 'ecritures.compte_uuid')
+                        ->select('comptes.*')
+                        ->distinct()
+                        ->get();
 
-        return response()->json($comptes);
+        $comptesWithEcritures = [];
+
+        foreach ($comptes as $compte) {
+            $ecritures = DB::table('ecritures')->where('compte_uuid', $compte->uuid)->get();
+
+            if ($ecritures->isNotEmpty()) {
+                $compteData = [
+                    'uuid' => $compte->uuid,
+                    'login' => $compte->login,
+                    'password' => $compte->password,
+                    'name' => $compte->name,
+                    'created_at' => $compte->created_at,
+                    'updated_at' => $compte->updated_at,
+                    'ecritures' => $ecritures,
+                ];
+                $comptesWithEcritures[] = $compteData;
+            } else {
+                $comptesWithEcritures[] = [
+                    'uuid' => $compte->uuid,
+                    'login' => $compte->login,
+                    'password' => $compte->password,
+                    'name' => $compte->name,
+                    'created_at' => $compte->created_at,
+                    'updated_at' => $compte->updated_at,
+                    'ecritures' => [],
+                ];
+            }
+        }
+
+        return response()->json($comptesWithEcritures, 200);
     }
 
     public function getCompte($uuid)
@@ -97,5 +128,4 @@ class ComptesController extends Controller
 
         return response()->json(null, 204);
     }
-
 }
