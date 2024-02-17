@@ -59,7 +59,7 @@ class ComptesController extends Controller
 
       return response()->json($compteDTO, 201);
   }
-  
+
   public function putCompte(Request $request, $uuid)
   {
       $validator = Validator::make($request->all(), [
@@ -91,6 +91,19 @@ class ComptesController extends Controller
       );
 
       return response()->json($compteDTO, 200);
+  }
+
+  public function deleteCompte($uuid)
+  {
+      $compte = Compte::where('uuid', $uuid)->first();
+
+      if (!$compte) {
+          return response()->json(['message' => 'Compte non trouvé.'], 404);
+      }
+
+      $compte->delete();
+
+      return response()->json(null, 204);
   }
 
 }
