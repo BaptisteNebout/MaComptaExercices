@@ -5,105 +5,97 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Compte;
 use Illuminate\Http\Request;
-use App\Models\Ecriture;
 use Illuminate\Support\Carbon;
-use App\DataObject\CompteDTO;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class ComptesController extends Controller
 {
 
-  public function getComptes()
-  {
-      $comptes = Compte::all();
+    public function getComptes()
+    {
+        $comptes = DB::table('comptes')->get();
 
-      return response()->json( $comptes );
-  }
+        return response()->json($comptes);
+    }
 
-  public function getCompte( $uuid )
-  {
-    $compte = Compte::where('uuid', '=', $uuid)->first();
+    public function getCompte($uuid)
+    {
+        $compte = DB::table('comptes')->where('uuid', $uuid)->first();
 
-    return response()->json( $compte );
-  }
+        return response()->json($compte, 200);
+    }
 
-  public function postCompte(Request $request)
-  {
-      $validator = Validator::make($request->all(), [
-          'login' => 'required|string|max:255',
-          'password' => 'required|string',
-          'name' => 'required|string',
-      ]);
+    public function postCompte(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'login' => 'required|string|max:255',
+            'password' => 'required|string',
+            'name' => 'required|string',
+        ]);
 
-      if ($validator->fails()) {
-          return response()->json(['errors' => $validator->errors()], 400);
-      }
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
 
-      $compte = new Compte();
-      $compte->uuid = Str::uuid();
-      $compte->login = $request->input('login');
-      $compte->password = $request->input('password');
-      $compte->name = $request->input('name');
-      $compte->save();
+        $uuid = Str::uuid();
 
-      $compteDTO = new CompteDTO(
-          $compte->uuid,
-          $compte->login,
-          $compte->password,
-          $compte->name,
-          $compte->created_at,
-          $compte->updated_at
-      );
+        DB::table('comptes')->insert([
+            'uuid' => $uuid,
+            'login' => $request->input('login'),
+            'password' => $request->input('password'),
+            'name' => $request->input('name'),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
 
-      return response()->json($compteDTO, 201);
-  }
+        return response()->json(['uuid' => $uuid], 201);
+    }
 
-  public function putCompte(Request $request, $uuid)
-  {
-      $validator = Validator::make($request->all(), [
-          'password' => 'required|string',
-          'name' => 'required|string',
-      ]);
+    public function putCompte(Request $request, $uuid)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string',
+            'name' => 'required|string',
+        ]);
 
-      if ($validator->fails()) {
-          return response()->json(['errors' => $validator->errors()], 400);
-      }
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
 
-      $compte = Compte::where('uuid', $uuid)->first();
-      if (!$compte) {
-          return response()->json(['message' => 'Compte non trouvé.'], 404);
-      }
+        $compte = DB::table('comptes')->where('uuid', $uuid)->first();
+        if (!$compte) {
+            return response()->json(['message' => 'Compte non trouvé.'], 404);
+        }
 
-      $compte->password = $request->input('password');
-      $compte->name = $request->input('name');
-      $compte->updated_at = Carbon::now();
-      $compte->save();
+        DB::table('comptes')
+            ->where('uuid', $uuid)
+            ->update([
+                'password' => $request->input('password'),
+                'name' => $request->input('name'),
+                'updated_at' => Carbon::now(),
+            ]);
 
-      $compteDTO = new CompteDTO(
-          $compte->uuid,
-          $compte->login,
-          $compte->password,
-          $compte->name,
-          $compte->created_at,
-          $compte->updated_at
-      );
+        return response()->json($compte, 204);
+    }
 
-      return response()->json($compteDTO, 200);
-  }
+    public function deleteCompte($uuid)
+    {
+        $count = DB::table('ecritures')->where('compte_uuid', $uuid)->count();
 
-  public function deleteCompte($uuid)
-  {
-      $compte = Compte::where('uuid', $uuid)->first();
+        if ($count > 0) {
+            return response()->json(['message' => 'Ce compte a des écritures associées et ne peut pas être supprimé.'], 400);
+        }
 
-      if (!$compte) {
-          return response()->json(['message' => 'Compte non trouvé.'], 404);
-      }
+        $compte = DB::table('comptes')->where('uuid', $uuid)->first();
+        if (!$compte) {
+            return response()->json(['message' => 'Compte non trouvé.'], 404);
+        }
 
-      $compte->delete();
+        DB::table('comptes')->where('uuid', $uuid)->delete();
 
-      return response()->json(null, 204);
-  }
+        return response()->json(null, 204);
+    }
 
 }
