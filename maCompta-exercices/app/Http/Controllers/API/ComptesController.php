@@ -59,5 +59,38 @@ class ComptesController extends Controller
 
       return response()->json($compteDTO, 201);
   }
+  
+  public function putCompte(Request $request, $uuid)
+  {
+      $validator = Validator::make($request->all(), [
+          'password' => 'required|string',
+          'name' => 'required|string',
+      ]);
+
+      if ($validator->fails()) {
+          return response()->json(['errors' => $validator->errors()], 400);
+      }
+
+      $compte = Compte::where('uuid', $uuid)->first();
+      if (!$compte) {
+          return response()->json(['message' => 'Compte non trouvé.'], 404);
+      }
+
+      $compte->password = $request->input('password');
+      $compte->name = $request->input('name');
+      $compte->updated_at = Carbon::now();
+      $compte->save();
+
+      $compteDTO = new CompteDTO(
+          $compte->uuid,
+          $compte->login,
+          $compte->password,
+          $compte->name,
+          $compte->created_at,
+          $compte->updated_at
+      );
+
+      return response()->json($compteDTO, 200);
+  }
 
 }
