@@ -169,8 +169,7 @@ class ComptesController extends Controller
         if ($count > 0) {
             return response()->json(
                 [
-                    'message' =>
-                        'Ce compte a des écritures associées et ne peut pas être supprimé.',
+                    'message' => 'Ce compte a des écritures associées et ne peut pas être supprimé.',
                 ],
                 400
             );
