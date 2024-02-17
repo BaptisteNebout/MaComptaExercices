@@ -21,6 +21,7 @@ Route::get('/', function () {
 //Compte
 Route::get('/comptes', [ComptesController::class, 'getComptes']);
 Route::get('/comptes/{uuid}', [ComptesController::class, 'getCompte']);
+Route::post('/comptes', [ComptesController::class, 'postCompte']);
 
 //Ecriture
 Route::get('/comptes/{uuid}/ecritures', [EcrituresController::class, 'getEcritures']);

@@ -5,36 +5,59 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Compte;
 use Illuminate\Http\Request;
+use App\Models\Ecriture;
+use Illuminate\Support\Carbon;
+use App\DataObject\CompteDTO;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class ComptesController extends Controller
 {
-  /*
-  |-------------------------------------------------------------------------------
-  | Get All Compte
-  |-------------------------------------------------------------------------------
-  | URL:            /compte
-  | Method:         GET
-  | Description:    Récupère tous les comptes
-  */
-    public function getComptes(){
-        $comptes = Compte::all();
 
-        return response()->json( $comptes );
+  public function getComptes()
+  {
+      $comptes = Compte::all();
+
+      return response()->json( $comptes );
   }
 
-  /*
-  |-------------------------------------------------------------------------------
-  | Get An Individual Compte
-  |-------------------------------------------------------------------------------
-  | URL:            /compte/{uuid}
-  | Method:         GET
-  | Description:    récupère un compte individuel
-  | Parameters:
-  |   $uuid   -> UUID du compte
-  */
-  public function getCompte( $uuid ){
+  public function getCompte( $uuid )
+  {
     $compte = Compte::where('uuid', '=', $uuid)->first();
 
     return response()->json( $compte );
   }
+
+  public function postCompte(Request $request)
+  {
+      $validator = Validator::make($request->all(), [
+          'login' => 'required|string|max:255',
+          'password' => 'required|string',
+          'name' => 'required|string',
+      ]);
+
+      if ($validator->fails()) {
+          return response()->json(['errors' => $validator->errors()], 400);
+      }
+
+      $compte = new Compte();
+      $compte->uuid = Str::uuid();
+      $compte->login = $request->input('login');
+      $compte->password = $request->input('password');
+      $compte->name = $request->input('name');
+      $compte->save();
+
+      $compteDTO = new CompteDTO(
+          $compte->uuid,
+          $compte->login,
+          $compte->password,
+          $compte->name,
+          $compte->created_at,
+          $compte->updated_at
+      );
+
+      return response()->json($compteDTO, 201);
+  }
+
 }
