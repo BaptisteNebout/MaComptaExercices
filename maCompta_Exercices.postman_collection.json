@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "67451894-c8af-4ab2-ba79-95a07e9c72cc",
+		"name": "maCompta_Exercices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23637445"
+	},
+	"item": [
+		{
+			"name": "get all comptes et ecritures",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/comptes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"comptes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get single compte",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/comptes/{compte_uuid}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"comptes",
+						"020b577b-0c46-4348-86a2-9cc52f231b16"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get ecritures from compte",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/comptes/{compte_uuid}/ecritures",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"comptes",
+						"020b577b-0c46-4348-86a2-9cc52f231b16",
+						"ecritures"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post compte",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\": \"login test\",\r\n    \"password\": \"password test\",\r\n    \"name\": \"name test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/comptes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"comptes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post ecriture in compte",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"label\": \"ecriture test\",\r\n    \"date\": \"20/12/2024\",\r\n    \"type\": \"C\",\r\n    \"amount\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/comptes/{compte_uuid}/ecritures",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"comptes",
+						"020b577b-0c46-4348-86a2-9cc52f231b16",
+						"ecritures"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put compte",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"password\": \"password test modification\",\r\n    \"name\": \"name test modification\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/comptes/{compte_uuid}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"comptes",
+						"020b577b-0c46-4348-86a2-9cc52f231b16"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put ecriture in compte",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"label\": \"ecriture test modification\",\r\n    \"date\": \"01/01/2030\",\r\n    \"type\": \"D\",\r\n    \"amount\": 100000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/comptes/{compte_uuid}/ecritures/{ecriture_uuid}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"comptes",
+						"020b577b-0c46-4348-86a2-9cc52f231b16",
+						"ecritures",
+						"195fec14-045d-4ea0-95fb-a4efe50a1dff"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "del compte",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8000/comptes/{compte_uuid}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"comptes",
+						"020b577b-0c46-4348-86a2-9cc52f231b16"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "del ecriture in compte",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/comptes/{compte_uuid}/ecritures/{ecriture_uuid}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"comptes",
+						"020b577b-0c46-4348-86a2-9cc52f231b16",
+						"ecritures",
+						"195fec14-045d-4ea0-95fb-a4efe50a1dff"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
