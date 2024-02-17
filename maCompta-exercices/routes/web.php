@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\ComptesController;
 use App\Http\Controllers\API\EcrituresController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,14 +18,14 @@ use App\Http\Controllers\API\EcrituresController;
 Route::get('/', function () {
     return view('welcome');
 });
-//Compte
+// Compte
 Route::get('/comptes', [ComptesController::class, 'getComptes']);
 Route::get('/comptes/{uuid}', [ComptesController::class, 'getCompte']);
 Route::post('/comptes', [ComptesController::class, 'postCompte']);
 Route::put('/comptes/{uuid}', [ComptesController::class, 'putCompte']);
 Route::delete('/comptes/{uuid}', [ComptesController::class, 'deleteCompte']);
 
-//Ecriture
+// Ecriture
 Route::get('/comptes/{uuid}/ecritures', [EcrituresController::class, 'getEcritures']);
 Route::post('/comptes/{uuid}/ecritures', [EcrituresController::class, 'postEcriture']);
 Route::put('/comptes/{compte_uuid}/ecritures/{ecriture_uuid}', [EcrituresController::class, 'putEcriture']);

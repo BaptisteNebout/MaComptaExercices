@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Compte;
+use Illuminate\Database\Seeder;
 
 class CompteSeeder extends Seeder
 {

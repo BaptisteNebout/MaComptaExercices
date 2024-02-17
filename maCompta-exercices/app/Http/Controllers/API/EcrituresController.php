@@ -3,17 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Ecriture;
-use App\Models\Compte;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 class EcrituresController extends Controller
 {
-
     public function getEcritures($uuid)
     {
         $ecritures = DB::table('ecritures')->where('compte_uuid', $uuid)->get();
@@ -29,7 +26,7 @@ class EcrituresController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
-            'date' => ['required', 'date_format:d/m/Y', 'after_or_equal:' . now()->format('d/m/Y')],
+            'date' => ['required', 'date_format:d/m/Y', 'after_or_equal:'.now()->format('d/m/Y')],
             'type' => ['required', 'in:C,D'],
             'amount' => 'required|numeric|min:0',
         ]);
@@ -63,7 +60,7 @@ class EcrituresController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
-            'date' => ['required', 'date_format:d/m/Y', 'after_or_equal:' . now()->format('d/m/Y')],
+            'date' => ['required', 'date_format:d/m/Y', 'after_or_equal:'.now()->format('d/m/Y')],
             'type' => ['required', 'in:C,D'],
             'amount' => 'required|numeric|min:0',
         ]);

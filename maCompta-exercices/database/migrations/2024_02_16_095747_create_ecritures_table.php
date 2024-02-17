@@ -17,7 +17,7 @@ class CreateEcrituresTable extends Migration
             $table->enum('type', ['C', 'D']);
             $table->double('amount', 14, 2)->default(0.00);
             $table->timestamps();
-            
+
             $table->foreign('compte_uuid')->references('uuid')->on('comptes')->onUpdate('restrict')->onDelete('cascade');
         });
     }

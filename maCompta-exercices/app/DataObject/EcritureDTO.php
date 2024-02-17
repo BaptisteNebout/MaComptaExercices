@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\DataObject;
 
 class EcritureDTO

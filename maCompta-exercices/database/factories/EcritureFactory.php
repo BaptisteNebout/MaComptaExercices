@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Ecriture;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -12,6 +12,7 @@ use Ramsey\Uuid\Uuid;
 class EcritureFactory extends Factory
 {
     protected $model = Ecriture::class;
+
     /**
      * Define the model's default state.
      *
@@ -20,13 +21,14 @@ class EcritureFactory extends Factory
     public function definition(): array
     {
         $compte = \App\Models\Compte::factory()->create();
+
         return [
             'compte_uuid' => $compte->uuid,
             'uuid' => Uuid::uuid4()->toString(),
-            'label' => $this-> faker ->sentence,
-            'date' => $this-> faker ->date(),
-            'type' => $this-> faker ->randomElement(['C', 'D']),
-            'amount' => $this-> faker ->randomFloat(2, 0, 1000),
+            'label' => $this->faker->sentence,
+            'date' => $this->faker->date(),
+            'type' => $this->faker->randomElement(['C', 'D']),
+            'amount' => $this->faker->randomFloat(2, 0, 1000),
         ];
     }
 }

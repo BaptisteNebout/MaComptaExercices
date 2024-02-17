@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Compte;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
 
@@ -14,6 +14,7 @@ class CompteFactory extends Factory
 {
     protected $model = Compte::class;
     protected static ?string $password;
+
     /**
      * Define the model's default state.
      *
@@ -23,9 +24,9 @@ class CompteFactory extends Factory
     {
         return [
             'uuid' => Uuid::uuid4()->toString(),
-            'login' => $this-> faker -> userName(),
+            'login' => $this->faker->userName(),
             'password' => static::$password ??= Hash::make('password'),
-            'name' => $this-> faker -> name(),
+            'name' => $this->faker->name(),
         ];
     }
 }
