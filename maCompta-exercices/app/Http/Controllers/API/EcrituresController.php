@@ -14,16 +14,6 @@ use Illuminate\Support\Str;
 
 class EcrituresController extends Controller
 {
-    /*
-    |-------------------------------------------------------------------------------
-    | Get An Individual Compte
-    |-------------------------------------------------------------------------------
-    | URL:            /compte/{uuid}/ecritures
-    | Method:         GET
-    | Description:    récupère un compte individuel
-    | Parameters:
-    |   $uuid   -> UUID du compte
-    */
     public function getEcritures( $uuid )
     {
         $ecritures = Ecriture::where('compte_uuid', $uuid)->get();
@@ -71,19 +61,29 @@ class EcrituresController extends Controller
         $ecriture = new Ecriture();
         $ecriture->uuid = Str::uuid();
         $ecriture->label = $request->input('label');
-        $ecriture->date = \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date'))->toDateString();
+        $ecriture->date = Carbon::createFromFormat('d/m/Y', $request->input('date'))->toDateString();
         $ecriture->type = $request->input('type');
         $ecriture->amount = $request->input('amount');
         $ecriture->compte_uuid = $compte->uuid;
 
         $ecriture->save();
 
-        return response()->json(['uuid' => $ecriture->uuid], 201);
+        $ecritureDTO = new EcritureDTO(
+            $ecriture->uuid,
+            $ecriture->compte_uuid,
+            $ecriture->label,
+            $ecriture->date,
+            $ecriture->type,
+            $ecriture->amount,
+            $ecriture->created_at,
+            $ecriture->updated_at
+        );
+
+        return response()->json($ecritureDTO, 201);
     }
 
     public function putEcriture(Request $request, $compte_uuid, $ecriture_uuid)
     {
-
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
             'date' => ['required', 'date_format:d/m/Y', 'after_or_equal:' . now()->format('d/m/Y')],
@@ -107,8 +107,20 @@ class EcrituresController extends Controller
 
         $ecriture->save();
 
-        return response()->json($ecriture, 204);
+        $ecritureDTO = new EcritureDTO(
+            $ecriture->uuid,
+            $ecriture->compte_uuid,
+            $ecriture->label,
+            $ecriture->date,
+            $ecriture->type,
+            $ecriture->amount,
+            $ecriture->created_at,
+            $ecriture->updated_at
+        );
+
+        return response()->json($ecritureDTO, 204);
     }
+
 
     public function deleteEcriture($compte_uuid, $ecriture_uuid)
     {
