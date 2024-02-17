@@ -99,6 +99,11 @@ class EcrituresController extends Controller
 
     public function deleteEcriture($compte_uuid, $ecriture_uuid)
     {
+        $compte = DB::table('comptes')->where('uuid', $compte_uuid)->first();
+        if (!$compte) {
+            return response()->json(['message' => 'Compte non trouvé.'], 404);
+        }
+        
         $ecriture = DB::table('ecritures')->where('compte_uuid', $compte_uuid)->where('uuid', $ecriture_uuid)->first();
 
         if (!$ecriture) {
